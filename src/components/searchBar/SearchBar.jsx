@@ -1,4 +1,5 @@
 import { useState } from "react";
+import './searchBar.scss';
 
 const SearchBar = ({ setQuery, setCategoria, setActivateSearch }) => {
   const [localQuery, setLocalQuery] = useState("");

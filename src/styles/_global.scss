@@ -1,0 +1,13 @@
+@use './variables';
+
+body{
+  background: variables.$corDoBody;
+}
+
+/* Container geral */
+.container {
+  margin: 20px auto;
+  width: 90%;
+  min-height: 100vh;
+  text-align: center;
+}

@@ -1,12 +1,23 @@
-# React + Vite
+# Álbum de Fotos
 
-This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
+Aplicação web responsiva para buscar, visualizar e ampliar imagens utilizando a API do Unsplash. Possui filtro por categorias e busca personalizada.
 
-Currently, two official plugins are available:
+---
 
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react) uses [Babel](https://babeljs.io/) for Fast Refresh
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react-swc) uses [SWC](https://swc.rs/) for Fast Refresh
+## 🔧 Tecnologias
 
-## Expanding the ESLint configuration
+- React
+- Vite
+- SCSS (modular e escalável)
 
-If you are developing a production application, we recommend using TypeScript with type-aware lint rules enabled. Check out the [TS template](https://github.com/vitejs/vite/tree/main/packages/create-vite/template-react-ts) for information on how to integrate TypeScript and [`typescript-eslint`](https://typescript-eslint.io) in your project.
+## 🚀 Funcionalidades
+
+- Buscar fotos pela **API do Unsplash**
+- Filtro por **categoria** ou **termos personalizados**
+- Visualização em **grid responsivo**
+- Clique em uma imagem para ver em **tela ampliada**
+- Design limpo, acessível e adaptado a **dispositivos móveis**
+
+## 🔗 Links
+- Projeto online: https://album-de-fotos-iota.vercel.app/
+- Código-fonte: https://github.com/R4f4ell/albumDeFotos

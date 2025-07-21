@@ -1,8 +1,8 @@
 import React, { useState, useEffect } from "react";
-import SearchBar from "./components/SearchBar";
-import FotoList from "./components/FotoList";
-import FotoAmpliada from "./components/FotoAmpliada";
-import "./index.css";
+import SearchBar from "./components/searchBar/SearchBar";
+import FotoList from "./components/foto-fotoList/FotoList";
+import FotoAmpliada from "./components/fotoAmpliada/FotoAmpliada";
+import './styles/main.scss';
 
 import axios from "axios";
 

@@ -1,5 +1,5 @@
-import React from "react";
 import Foto from "./Foto";
+import './foto.scss';
 
 const FotoList = ({ fotos, setFotoAmpliada }) => {
   return (
