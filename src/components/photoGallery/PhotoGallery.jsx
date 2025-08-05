@@ -6,6 +6,11 @@ import { motion } from "framer-motion";
 import SearchBar from "../searchBar/SearchBar";
 import FotoList from "../foto-fotoList/FotoList";
 import FotoAmpliada from "../fotoAmpliada/FotoAmpliada";
+
+import { useDebounce } from "../../hooks/useDebounce";
+import { useInteractedPhotos } from "../../hooks/useInteractedPhotos";
+import { useFilteredPhotos } from "../../hooks/useFilteredPhotos";
+
 import "./photoGallery.scss";
 
 const IMAGES_PER_PAGE = 6;
@@ -20,9 +25,21 @@ const PhotoGallery = () => {
   const [fotoAmpliada, setFotoAmpliada] = useState(null);
 
   const apiKey = import.meta.env.VITE_UNSPLASH_API_KEY;
+  const debouncedQuery = useDebounce(query, 400);
+  const interactedPhotos = useInteractedPhotos(categoria, apiKey);
+
+  const fotosExibidas = useFilteredPhotos({
+    fotos,
+    categoria,
+    query: debouncedQuery,
+    interactedPhotos,
+  });
 
   const fetchImages = async (reset = false) => {
-    const searchQuery = [query, categoria].filter(Boolean).join(" ");
+    const isFilter = categoria === "liked" || categoria === "downloaded";
+    const searchQuery = isFilter
+      ? ""
+      : [debouncedQuery, categoria].filter(Boolean).join(" ");
     const endpoint = searchQuery
       ? "https://api.unsplash.com/search/photos"
       : "https://api.unsplash.com/photos";
@@ -36,37 +53,48 @@ const PhotoGallery = () => {
     try {
       const res = await axios.get(endpoint, { params });
       const results = searchQuery ? res.data.results : res.data;
-      setFotos(prev => (reset ? results : [...prev, ...results]));
-      if (searchQuery) {
-        setHasMore(page < res.data.total_pages);
-      } else {
-        setHasMore(results.length === IMAGES_PER_PAGE);
+      setFotos((prev) => {
+        if (reset) return results;
+        const prevIds = new Set(prev.map((f) => f.id));
+        const unique = results.filter((f) => !prevIds.has(f.id));
+        return [...prev, ...unique];
+      });
+      if (!isFilter) {
+        setHasMore(
+          searchQuery
+            ? page < res.data.total_pages
+            : results.length === IMAGES_PER_PAGE
+        );
       }
     } catch (err) {
       console.error("Erro ao buscar imagens:", err);
     }
   };
 
-  // trigger de pesquisa
   useEffect(() => {
     if (activateSearch) {
-      setPage(1);
-      fetchImages(true);
+      if (!["liked", "downloaded"].includes(categoria)) {
+        setPage(1);
+        fetchImages(true);
+      }
       setActivateSearch(false);
     }
   }, [activateSearch]);
 
-  // load more
   useEffect(() => {
     if (page > 1) fetchImages();
   }, [page]);
 
-  // busca inicial
   useEffect(() => {
     fetchImages(true);
   }, []);
 
-  const handleLoadMore = () => setPage(prev => prev + 1);
+  // Quando categoria muda para liked/downloaded, garante re-render imediato
+  useEffect(() => {
+    // dispara render ao mudar categoria, sem reload
+  }, [categoria]);
+
+  const handleLoadMore = () => setPage((p) => p + 1);
 
   return (
     <div className="photo-gallery">
@@ -76,9 +104,13 @@ const PhotoGallery = () => {
         setActivateSearch={setActivateSearch}
       />
 
-      <FotoList fotos={fotos} setFotoAmpliada={setFotoAmpliada} />
+      {(["liked", "downloaded"].includes(categoria) && fotosExibidas.length === 0) ? (
+        <p className="empty-message">Nada por aqui. Curta ou baixe algumas imagens primeiro!</p>
+      ) : (
+        <FotoList fotos={fotosExibidas} setFotoAmpliada={setFotoAmpliada} />
+      )}
 
-      {hasMore && (
+      {!(["liked", "downloaded"].includes(categoria)) && hasMore && (
         <motion.button
           className="load-more"
           onClick={handleLoadMore}
@@ -91,10 +123,7 @@ const PhotoGallery = () => {
       )}
 
       {fotoAmpliada && (
-        <FotoAmpliada
-          foto={fotoAmpliada}
-          setFotoAmpliada={setFotoAmpliada}
-        />
+        <FotoAmpliada foto={fotoAmpliada} setFotoAmpliada={setFotoAmpliada} />
       )}
     </div>
   );

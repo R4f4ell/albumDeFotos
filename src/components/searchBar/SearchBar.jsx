@@ -15,6 +15,7 @@ const SearchBar = ({ setQuery, setCategoria, setActivateSearch }) => {
 
   const handleSearch = () => {
     setQuery(localQuery);
+    setCategoria("");             // limpa “liked”/“downloaded”
     setActivateSearch(true);
   };
 
@@ -54,6 +55,8 @@ const SearchBar = ({ setQuery, setCategoria, setActivateSearch }) => {
               {cat}
             </option>
           ))}
+          <option value="liked">Curtidas</option>
+          <option value="downloaded">Baixadas</option>
         </select>
       </div>
     </motion.div>

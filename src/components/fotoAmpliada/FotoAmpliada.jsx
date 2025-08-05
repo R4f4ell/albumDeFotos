@@ -1,83 +1,101 @@
-import { X, Heart, Download } from 'lucide-react';
-import { useState, useEffect, useRef } from 'react';
-import './fotoAmpliada.scss';
+import { X, Heart, Download } from 'lucide-react'
+import { useState, useEffect, useRef } from 'react'
+import './fotoAmpliada.scss'
+
+import {
+  getInteraction,
+  incrementLike,
+  incrementDownload
+} from '../../utils/interactions'
 
 const FotoAmpliada = ({ foto, setFotoAmpliada }) => {
-  const [liked, setLiked] = useState(false);
-  const imageRef = useRef(null);
+  const [liked, setLiked] = useState(false)
+  const imageRef = useRef(null)
 
+  // bloqueia scroll ao abrir
   useEffect(() => {
-    document.body.style.overflow = 'hidden';
-    return () => {
-      document.body.style.overflow = 'auto';
-    };
-  }, []);
+    document.body.style.overflow = 'hidden'
+    return () => { document.body.style.overflow = 'auto' }
+  }, [])
+
+  // carrega estado de like
+  useEffect(() => {
+    const load = async () => {
+      const interaction = await getInteraction(foto.id)
+      if (interaction?.likes > 0) setLiked(true)
+    }
+    if (foto?.id) load()
+  }, [foto])
 
   const handleLike = (e) => {
-    e.stopPropagation();
-    setLiked(!liked);
-  };
+    e.stopPropagation()
+    if (!liked) {
+      setLiked(true)                               // feedback imediato
+      incrementLike(foto.id).catch(console.error)  // salva no banco em background
+    }
+  }
 
-  const handleClose = () => {
-    setFotoAmpliada(null);
-  };
+  const handleDownload = async (e) => {
+    e.stopPropagation()
+    // download local via blob
+    const res = await fetch(foto.urls.full)
+    const blob = await res.blob()
+    const url = URL.createObjectURL(blob)
+    const a = document.createElement('a')
+    a.href = url
+    a.download = `${foto.id}.jpg`
+    a.click()
+    URL.revokeObjectURL(url)
+    incrementDownload(foto.id).catch(console.error) // salva no banco em background
+  }
 
-  const handleMouseMove = (e) => {
-    if (window.innerWidth < 1024) return; // só desktop
+  const handleClose = () => setFotoAmpliada(null)
 
-    const img = imageRef.current;
-    const rect = img.getBoundingClientRect();
-    const x = ((e.clientX - rect.left) / rect.width) * 100;
-    const y = ((e.clientY - rect.top) / rect.height) * 100;
-    img.style.transformOrigin = `${x}% ${y}%`;
-  };
-
-  const handleMouseEnter = () => {
-    if (window.innerWidth < 1024) return;
-    imageRef.current.style.transform = 'scale(2)';
-  };
-
-  const handleMouseLeave = () => {
-    if (window.innerWidth < 1024) return;
-    imageRef.current.style.transform = 'scale(1)';
-    imageRef.current.style.transformOrigin = 'center center';
-  };
+  const onMove = (e) => {
+    if (window.innerWidth < 1024) return
+    const rect = imageRef.current.getBoundingClientRect()
+    const x = ((e.clientX - rect.left) / rect.width) * 100
+    const y = ((e.clientY - rect.top) / rect.height) * 100
+    imageRef.current.style.transformOrigin = `${x}% ${y}%`
+  }
+  const onEnter = () => {
+    if (window.innerWidth < 1024) return
+    imageRef.current.style.transform = 'scale(2)'
+  }
+  const onLeave = () => {
+    if (window.innerWidth < 1024) return
+    imageRef.current.style.transform = 'scale(1)'
+    imageRef.current.style.transformOrigin = 'center center'
+  }
 
   return (
     <div className="foto-ampliada-backdrop" onClick={handleClose}>
-      <div className="foto-ampliada-container" onClick={(e) => e.stopPropagation()}>
+      <div className="foto-ampliada-container" onClick={e => e.stopPropagation()}>
         <button className="close-btn" onClick={handleClose}>
           <X />
         </button>
-
         <img
           ref={imageRef}
           src={foto.urls.regular}
           alt={foto.alt_description}
-          onMouseMove={handleMouseMove}
-          onMouseEnter={handleMouseEnter}
-          onMouseLeave={handleMouseLeave}
+          onMouseMove={onMove}
+          onMouseEnter={onEnter}
+          onMouseLeave={onLeave}
         />
-
         <div className="modal-actions">
           <button className="like-btn" onClick={handleLike}>
-            <Heart fill={liked ? '#ff0000' : 'none'} color={liked ? '#ff0000' : '#fff'} />
+            <Heart
+              fill={liked ? '#ff0000' : 'none'}
+              color={liked ? '#ff0000' : '#ffffff'}
+            />
           </button>
-
-          <a
-            className="download-btn"
-            href={foto.urls.full}
-            download
-            target="_blank"
-            rel="noopener noreferrer"
-            onClick={(e) => e.stopPropagation()}
-          >
+          <button className="download-btn" onClick={handleDownload}>
             <Download />
-          </a>
+          </button>
         </div>
       </div>
     </div>
-  );
-};
+  )
+}
 
-export default FotoAmpliada;
+export default FotoAmpliada
