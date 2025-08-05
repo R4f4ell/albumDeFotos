@@ -1,21 +1,17 @@
 .foto-ampliada-backdrop {
   position: fixed;
   inset: 0;
-  background: rgba(0, 0, 0, 0.74);
+  background: rgba(0, 0, 0, 0.85);
   display: flex;
   justify-content: center;
   align-items: center;
   z-index: 9999;
 
   .foto-ampliada-container {
-    background-color: transparent;
+    position: relative;
     border-radius: 12px;
+    background: #000;
     overflow: hidden;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-
-    // Tamanhos fixos por breakpoint
     width: 90vw;
     height: 80vh;
 
@@ -35,10 +31,72 @@
     }
 
     img {
-      max-width: 100%;
-      max-height: 100%;
-      object-fit: contain;
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
       border-radius: 8px;
+
+      @media (min-width: 1024px) {
+        transform: scale(1);
+        cursor: zoom-in;
+        transition: transform 0.2s ease;
+      }
+    }
+
+    .close-btn {
+      position: absolute;
+      top: 10px;
+      right: 10px;
+      background: rgba(0, 0, 0, 0.6);
+      border: none;
+      color: white;
+      padding: 8px;
+      border-radius: 50%;
+      cursor: pointer;
+      z-index: 1;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      transition: background 0.2s ease;
+
+      &:hover {
+        background: rgba(255, 255, 255, 0.2);
+      }
+
+      svg {
+        stroke-width: 2.5;
+      }
+    }
+
+    .modal-actions {
+      position: absolute;
+      bottom: 10px;
+      left: 0;
+      width: 100%;
+      padding: 0 16px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      pointer-events: none;
+
+      .like-btn,
+      .download-btn {
+        background: rgba(0, 0, 0, 0.6);
+        border: none;
+        color: white;
+        padding: 8px;
+        border-radius: 50%;
+        cursor: pointer;
+        pointer-events: all;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        transition: background 0.2s ease;
+
+        &:hover {
+          background: rgba(255, 255, 255, 0.2);
+        }
+      }
     }
   }
 }
