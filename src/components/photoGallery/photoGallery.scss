@@ -1,0 +1,20 @@
+.photo-gallery {
+  padding: 0 16px;
+
+  .load-more {
+    display: flex;
+    margin: 32px auto;           
+    padding: 12px;               
+    background: rgba(0, 191, 255, 0.2);
+    border: none;
+    border-radius: 50%;
+    cursor: pointer;
+    color: #fff;
+    transition: opacity 0.2s, background 0.2s;
+
+    &:hover {
+      opacity: 0.8;
+      background: rgba(0, 191, 255, 0.3);
+    }
+  }
+}

@@ -6,8 +6,15 @@ body{
 
 /* Container geral */
 .container {
-  margin: 20px auto;
-  width: 90%;
-  min-height: 100vh;
-  text-align: center;
+  width: 100%;
+  padding: 0 16px;
+  margin: 0 auto;
+
+  @media (min-width: 601px) and (max-width: 1024px) {
+    max-width: 720px;   /* tablet: mantém lateral igual ao mobile, mas aumenta espaço */
+  }
+
+  @media (min-width: 1025px) {
+    max-width: 1200px;  /* desktop: ainda mais espaço para as colunas */
+  }
 }
