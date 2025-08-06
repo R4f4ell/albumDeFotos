@@ -1,3 +1,4 @@
+/* src/components/searchBar/searchBar.scss */
 .search-bar {
   display: flex;
   justify-content: center;
@@ -5,14 +6,14 @@
   gap: 12px;
   margin: 24px auto;
   max-width: 720px;
-  padding: 0 16px; /* padding lateral para evitar que encoste nas bordas */
+  padding: 0 16px;
 
   .input-wrapper,
   .select-wrapper {
     position: relative;
     display: flex;
     align-items: center;
-    height: 48px; /* altura fixa para todos os elementos */
+    height: 48px;
 
     .icon {
       position: absolute;
@@ -34,22 +35,30 @@
     select {
       padding: 12px 16px 12px 36px;
       font-size: 1rem;
-      border: 1px solid #444;
-      border-radius: 8px;
       background-color: #1e1e1e;
       color: #fff;
-      transition: 0.3s ease;
-      outline: none;
       width: 100%;
-      height: 100%; /* ocupa toda a altura do container */
+      height: 100%;
       min-width: 0;
       box-sizing: border-box;
-    }
+      border: 1px solid #00bfff;
+      border-radius: 4px;
+      outline: none;
+      transition: border-color 0.2s ease, box-shadow 0.2s ease;
 
-    input:focus,
-    select:focus {
-      border-color: #00bfff;
-      box-shadow: 0 0 0 3px rgba(0, 191, 255, 0.2);
+      &:hover {
+        border-color: #40d4ff;
+        box-shadow: 0 0 6px rgba(0, 191, 255, 0.3);
+      }
+
+      &:focus {
+        border-color: #00d4ff;
+        box-shadow: 0 0 8px rgba(0, 191, 255, 0.4);
+      }
+
+      &:active {
+        border-color: #0099cc;
+      }
     }
 
     select {
@@ -58,7 +67,7 @@
       background-repeat: no-repeat;
       background-position: right 12px center;
       background-size: 16px;
-      padding-right: 50px; /* ainda mais espaço para a seta */
+      padding-right: 50px;
       text-overflow: ellipsis;
       overflow: hidden;
       white-space: nowrap;
@@ -66,13 +75,13 @@
   }
 
   .input-wrapper {
-    flex: 2; /* input ocupa mais espaço */
+    flex: 2;
     min-width: 200px;
   }
 
   .select-wrapper {
-    flex: 1.8; /* muito mais espaço para o select */
-    min-width: 220px; /* min-width bem maior */
+    flex: 1.8;
+    min-width: 220px;
   }
 
   button {
@@ -90,7 +99,7 @@
     transition: 0.3s ease;
     white-space: nowrap;
     flex-shrink: 0;
-    height: 48px; /* mesma altura dos outros elementos */
+    height: 48px;
     box-sizing: border-box;
 
     &:hover {
@@ -116,7 +125,7 @@
 
     .input-wrapper,
     .select-wrapper {
-      height: 44px; 
+      height: 44px;
 
       input,
       select {
@@ -132,7 +141,7 @@
     }
 
     .select-wrapper {
-      min-width: 200px; /* bem mais espaço para mobile */
+      min-width: 200px;
 
       select {
         padding-right: 50px;
@@ -142,8 +151,8 @@
     button {
       padding: 10px 16px;
       font-size: 1rem;
-      height: 44px; /* mesma altura dos outros elementos */
-      
+      height: 44px;
+
       svg {
         margin-right: 4px !important;
       }
@@ -208,7 +217,7 @@
     }
 
     .select-wrapper {
-      flex: 2.2; /* ainda mais espaço para o select */
+      flex: 2.2;
       min-width: 200px;
       height: 48px;
 
@@ -241,7 +250,7 @@
     }
 
     .select-wrapper {
-      flex: 1.8; /* mais espaço para o select */
+      flex: 1.8;
       min-width: 200px;
       height: 48px;
 
@@ -340,9 +349,10 @@
   @media (max-height: 500px) and (orientation: landscape) {
     margin: 16px auto;
     padding: 0 16px;
-    
+
     .input-wrapper,
     .select-wrapper {
+
       input,
       select {
         padding: 8px 12px 8px 32px;
@@ -358,8 +368,10 @@
 
   /* ====== MELHORIAS GERAIS DE ACESSIBILIDADE ====== */
   @media (prefers-reduced-motion: reduce) {
+
     .input-wrapper,
     .select-wrapper {
+
       input,
       select {
         transition: none;
@@ -369,20 +381,5 @@
     button {
       transition: none;
     }
-  }
-
-  /* ====== ESTADOS DE FOCO MELHORADOS ====== */
-  .input-wrapper,
-  .select-wrapper {
-    input:focus-visible,
-    select:focus-visible {
-      outline: 2px solid #00bfff;
-      outline-offset: 2px;
-    }
-  }
-
-  button:focus-visible {
-    outline: 2px solid #ffffff;
-    outline-offset: 2px;
   }
 }
