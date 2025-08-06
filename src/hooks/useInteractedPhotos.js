@@ -2,7 +2,7 @@ import { useState, useEffect, useRef } from "react";
 import axios from "axios";
 import { getLikedImageIds, getDownloadedImageIds } from "../utils/interactions";
 
-export function useInteractedPhotos(categoria, apiKey) {
+export function useInteractedPhotos(categoria, apiKey, onReady) {
   const [photos, setPhotos] = useState([]);
   const cache = useRef({ liked: null, downloaded: null });
 
@@ -11,11 +11,13 @@ export function useInteractedPhotos(categoria, apiKey) {
 
     (async () => {
       let list = cache.current[categoria];
+
       if (!list) {
         const ids =
           categoria === "liked"
             ? await getLikedImageIds()
             : await getDownloadedImageIds();
+
         const results = await Promise.all(
           ids.map((id) =>
             axios
@@ -23,14 +25,19 @@ export function useInteractedPhotos(categoria, apiKey) {
                 params: { client_id: apiKey },
               })
               .then((r) => r.data)
+              .catch(() => null)
           )
         );
-        cache.current[categoria] = results;
-        list = results;
+
+        // Filtra os nulls em caso de erro
+        list = results.filter(Boolean);
+        cache.current[categoria] = list;
       }
+
       setPhotos(list);
+      if (onReady) onReady();
     })();
-  }, [categoria, apiKey]);
+  }, [categoria, apiKey, onReady]);
 
   return photos;
 }

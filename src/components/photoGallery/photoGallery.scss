@@ -1,7 +1,8 @@
 .photo-gallery {
   padding: 0 16px;
 
-  .empty-message {
+  .empty-message,
+  .loading-message {
     text-align: center;
     margin: 32px 0;
     font-size: 1.25rem;

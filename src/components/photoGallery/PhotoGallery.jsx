@@ -23,10 +23,14 @@ const PhotoGallery = () => {
   const [page, setPage] = useState(1);
   const [hasMore, setHasMore] = useState(false);
   const [fotoAmpliada, setFotoAmpliada] = useState(null);
+  const [isLoading, setIsLoading] = useState(false);
+  const [interactedReady, setInteractedReady] = useState(false);
 
   const apiKey = import.meta.env.VITE_UNSPLASH_API_KEY;
   const debouncedQuery = useDebounce(query, 400);
-  const interactedPhotos = useInteractedPhotos(categoria, apiKey);
+  const interactedPhotos = useInteractedPhotos(categoria, apiKey, () => {
+    setInteractedReady(true);
+  });
 
   const fotosExibidas = useFilteredPhotos({
     fotos,
@@ -50,6 +54,8 @@ const PhotoGallery = () => {
       query: searchQuery || undefined,
     };
 
+    setIsLoading(true);
+
     try {
       const res = await axios.get(endpoint, { params });
       const results = searchQuery ? res.data.results : res.data;
@@ -68,6 +74,8 @@ const PhotoGallery = () => {
       }
     } catch (err) {
       console.error("Erro ao buscar imagens:", err);
+    } finally {
+      setIsLoading(false);
     }
   };
 
@@ -89,12 +97,15 @@ const PhotoGallery = () => {
     fetchImages(true);
   }, []);
 
-  // Quando categoria muda para liked/downloaded, garante re-render imediato
   useEffect(() => {
-    // dispara render ao mudar categoria, sem reload
+    setFotos([]);
+    setInteractedReady(false);
   }, [categoria]);
 
   const handleLoadMore = () => setPage((p) => p + 1);
+
+  const isInteractedCategory = ["liked", "downloaded"].includes(categoria);
+  const hasInteracted = interactedPhotos.length > 0;
 
   return (
     <div className="photo-gallery">
@@ -104,22 +115,32 @@ const PhotoGallery = () => {
         setActivateSearch={setActivateSearch}
       />
 
-      {(["liked", "downloaded"].includes(categoria) && fotosExibidas.length === 0) ? (
-        <p className="empty-message">Nada por aqui. Curta ou baixe algumas imagens primeiro!</p>
+      {isInteractedCategory ? (
+        !interactedReady ? (
+          <p className="loading-message">Carregando...</p>
+        ) : hasInteracted ? (
+          <FotoList fotos={fotosExibidas} setFotoAmpliada={setFotoAmpliada} />
+        ) : (
+          <p className="empty-message">
+            Nada por aqui. Curta ou baixe algumas imagens primeiro!
+          </p>
+        )
       ) : (
-        <FotoList fotos={fotosExibidas} setFotoAmpliada={setFotoAmpliada} />
-      )}
+        <>
+          <FotoList fotos={fotosExibidas} setFotoAmpliada={setFotoAmpliada} />
 
-      {!(["liked", "downloaded"].includes(categoria)) && hasMore && (
-        <motion.button
-          className="load-more"
-          onClick={handleLoadMore}
-          initial={{ opacity: 0 }}
-          animate={{ opacity: 1 }}
-          transition={{ duration: 0.3 }}
-        >
-          <ArrowDown size={24} />
-        </motion.button>
+          {hasMore && (
+            <motion.button
+              className="load-more"
+              onClick={handleLoadMore}
+              initial={{ opacity: 0 }}
+              animate={{ opacity: 1 }}
+              transition={{ duration: 0.3 }}
+            >
+              <ArrowDown size={24} />
+            </motion.button>
+          )}
+        </>
       )}
 
       {fotoAmpliada && (
