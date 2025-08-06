@@ -71,7 +71,7 @@ const FotoAmpliada = ({ foto, setFotoAmpliada }) => {
   return (
     <div className="foto-ampliada-backdrop" onClick={handleClose}>
       <div className="foto-ampliada-container" onClick={e => e.stopPropagation()}>
-        <button className="close-btn" onClick={handleClose}>
+        <button className="close-btn" onClick={handleClose} aria-label="Fechar imagem ampliada">
           <X />
         </button>
         <img
@@ -83,13 +83,13 @@ const FotoAmpliada = ({ foto, setFotoAmpliada }) => {
           onMouseLeave={onLeave}
         />
         <div className="modal-actions">
-          <button className="like-btn" onClick={handleLike}>
+          <button className="like-btn" onClick={handleLike} aria-label='Curtir imagem'>
             <Heart
               fill={liked ? '#ff0000' : 'none'}
               color={liked ? '#ff0000' : '#ffffff'}
             />
           </button>
-          <button className="download-btn" onClick={handleDownload}>
+          <button className="download-btn" onClick={handleDownload} aria-label="Baixar imagem">
             <Download />
           </button>
         </div>

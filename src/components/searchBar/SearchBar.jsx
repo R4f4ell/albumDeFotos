@@ -36,7 +36,7 @@ const SearchBar = ({ setQuery, setCategoria, setActivateSearch }) => {
         />
       </div>
 
-      <button onClick={handleSearch}>
+      <button onClick={handleSearch} type="button">
         <Search size={18} style={{ marginRight: "6px" }} />
         Pesquisar
       </button>

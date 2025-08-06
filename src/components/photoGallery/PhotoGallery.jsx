@@ -108,7 +108,7 @@ const PhotoGallery = () => {
   const hasInteracted = interactedPhotos.length > 0;
 
   return (
-    <div className="photo-gallery">
+    <section className="photo-gallery">
       <SearchBar
         setQuery={setQuery}
         setCategoria={setCategoria}
@@ -146,7 +146,7 @@ const PhotoGallery = () => {
       {fotoAmpliada && (
         <FotoAmpliada foto={fotoAmpliada} setFotoAmpliada={setFotoAmpliada} />
       )}
-    </div>
+    </section>
   );
 };
 
