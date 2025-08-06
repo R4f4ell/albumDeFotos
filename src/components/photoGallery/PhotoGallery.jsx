@@ -1,12 +1,11 @@
 import React, { useState, useEffect } from "react";
 import axios from "axios";
-import { ArrowDown } from "lucide-react";
-import { motion } from "framer-motion";
-
 import SearchBar from "../searchBar/SearchBar";
 import FotoList from "../foto-fotoList/FotoList";
 import FotoAmpliada from "../fotoAmpliada/FotoAmpliada";
 
+import { ArrowDown } from "lucide-react";
+import { motion } from "framer-motion";
 import { useDebounce } from "../../hooks/useDebounce";
 import { useInteractedPhotos } from "../../hooks/useInteractedPhotos";
 import { useFilteredPhotos } from "../../hooks/useFilteredPhotos";
@@ -55,7 +54,6 @@ const PhotoGallery = () => {
     };
 
     setIsLoading(true);
-
     try {
       const res = await axios.get(endpoint, { params });
       const results = searchQuery ? res.data.results : res.data;
@@ -102,7 +100,21 @@ const PhotoGallery = () => {
     setInteractedReady(false);
   }, [categoria]);
 
-  const handleLoadMore = () => setPage((p) => p + 1);
+  // infinite scroll automático
+  useEffect(() => {
+    const handleScroll = () => {
+      if (
+        window.innerHeight + window.pageYOffset >=
+          document.documentElement.offsetHeight - 10 &&
+        hasMore &&
+        !isLoading
+      ) {
+        setPage((p) => p + 1);
+      }
+    };
+    window.addEventListener("scroll", handleScroll);
+    return () => window.removeEventListener("scroll", handleScroll);
+  }, [hasMore, isLoading]);
 
   const isInteractedCategory = ["liked", "downloaded"].includes(categoria);
   const hasInteracted = interactedPhotos.length > 0;
@@ -119,7 +131,10 @@ const PhotoGallery = () => {
         !interactedReady ? (
           <p className="loading-message">Carregando...</p>
         ) : hasInteracted ? (
-          <FotoList fotos={fotosExibidas} setFotoAmpliada={setFotoAmpliada} />
+          <FotoList
+            fotos={fotosExibidas}
+            setFotoAmpliada={setFotoAmpliada}
+          />
         ) : (
           <p className="empty-message">
             Nada por aqui. Curta ou baixe algumas imagens primeiro!
@@ -128,23 +143,14 @@ const PhotoGallery = () => {
       ) : (
         <>
           <FotoList fotos={fotosExibidas} setFotoAmpliada={setFotoAmpliada} />
-
-          {hasMore && (
-            <motion.button
-              className="load-more"
-              onClick={handleLoadMore}
-              initial={{ opacity: 0 }}
-              animate={{ opacity: 1 }}
-              transition={{ duration: 0.3 }}
-            >
-              <ArrowDown size={24} />
-            </motion.button>
-          )}
         </>
       )}
 
       {fotoAmpliada && (
-        <FotoAmpliada foto={fotoAmpliada} setFotoAmpliada={setFotoAmpliada} />
+        <FotoAmpliada
+          foto={fotoAmpliada}
+          setFotoAmpliada={setFotoAmpliada}
+        />
       )}
     </section>
   );
