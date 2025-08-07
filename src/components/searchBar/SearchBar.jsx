@@ -1,3 +1,4 @@
+// src/components/searchBar/SearchBar.jsx
 import { useState } from "react";
 import { Search, List } from "lucide-react";
 import { motion } from "framer-motion";
@@ -13,18 +14,21 @@ const SearchBar = ({ setQuery, setCategoria, setActivateSearch }) => {
     "Esportes",
   ];
 
-  const handleSearch = () => {
+  // Submete a busca (Enter ou botão)
+  const handleSearch = (e) => {
+    if (e && e.preventDefault) e.preventDefault();
     setQuery(localQuery);
     setCategoria("");             // limpa “liked”/“downloaded”
     setActivateSearch(true);
   };
 
   return (
-    <motion.div
+    <motion.form
       className="search-bar"
       initial={{ opacity: 0, y: -20 }}
       animate={{ opacity: 1, y: 0 }}
       transition={{ duration: 0.4 }}
+      onSubmit={handleSearch}
     >
       <div className="input-wrapper">
         <Search className="icon" size={18} />
@@ -33,11 +37,16 @@ const SearchBar = ({ setQuery, setCategoria, setActivateSearch }) => {
           value={localQuery}
           onChange={(e) => setLocalQuery(e.target.value)}
           placeholder="Pesquisar fotos..."
+          aria-label="Campo de busca de fotos"
         />
       </div>
 
-      <button onClick={handleSearch} type="button">
-        <Search size={18} style={{ marginRight: "6px" }} />
+      <button
+        className="search-btn"
+        type="submit"
+        aria-label="Pesquisar imagens"
+      >
+        <Search className="icon" size={18} />
         Pesquisar
       </button>
 
@@ -48,6 +57,7 @@ const SearchBar = ({ setQuery, setCategoria, setActivateSearch }) => {
             setCategoria(e.target.value);
             setActivateSearch(true);
           }}
+          aria-label="Selecionar categoria"
         >
           <option value="">Todas as categorias</option>
           {categorias.map((cat) => (
@@ -59,7 +69,7 @@ const SearchBar = ({ setQuery, setCategoria, setActivateSearch }) => {
           <option value="downloaded">Baixadas</option>
         </select>
       </div>
-    </motion.div>
+    </motion.form>
   );
 };
 

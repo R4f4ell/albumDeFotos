@@ -102,6 +102,10 @@
     height: 48px;
     box-sizing: border-box;
 
+    .icon{
+      margin-right: 6px;
+    }
+
     &:hover {
       background-color: #009acd;
     }
