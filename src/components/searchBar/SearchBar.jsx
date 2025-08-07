@@ -1,4 +1,3 @@
-// src/components/searchBar/SearchBar.jsx
 import { useState } from "react";
 import { Search, List } from "lucide-react";
 import { motion } from "framer-motion";
@@ -14,11 +13,11 @@ const SearchBar = ({ setQuery, setCategoria, setActivateSearch }) => {
     "Esportes",
   ];
 
-  // Submete a busca (Enter ou botão)
+  // Busca (Enter ou botão)
   const handleSearch = (e) => {
     if (e && e.preventDefault) e.preventDefault();
     setQuery(localQuery);
-    setCategoria("");             // limpa “liked”/“downloaded”
+    setCategoria("");           
     setActivateSearch(true);
   };
 

@@ -1,4 +1,3 @@
-// src/hooks/useFilteredPhotos.js
 import { useMemo } from "react";
 
 export function useFilteredPhotos({ fotos, categoria, query, interactedPhotos }) {
@@ -8,7 +7,7 @@ export function useFilteredPhotos({ fotos, categoria, query, interactedPhotos })
       return fotos;
     }
 
-    // Se for liked/downloaded, começa da lista de interactedPhotos:
+    // Se for liked/downloaded, começa da lista de interactedPhotos
     let lista = interactedPhotos;
 
     // Só filtra pelo termo caso tenha query (dentro de liked/downloaded)

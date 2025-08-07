@@ -4,8 +4,6 @@ import SearchBar from "../searchBar/SearchBar";
 import FotoList from "../foto-fotoList/FotoList";
 import FotoAmpliada from "../fotoAmpliada/FotoAmpliada";
 
-import { ArrowDown } from "lucide-react";
-import { motion } from "framer-motion";
 import { useDebounce } from "../../hooks/useDebounce";
 import { useInteractedPhotos } from "../../hooks/useInteractedPhotos";
 import { useFilteredPhotos } from "../../hooks/useFilteredPhotos";

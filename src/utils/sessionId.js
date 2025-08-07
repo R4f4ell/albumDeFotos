@@ -1,4 +1,3 @@
-// src/utils/sessionId.js
 export function getSessionId() {
   let sessionId = localStorage.getItem('anon_session_id');
   if (!sessionId) {

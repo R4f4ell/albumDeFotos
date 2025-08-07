@@ -1,7 +1,7 @@
 import { supabase } from '../lib/supabase';
 import { getSessionId } from './sessionId';
 
-// Busca a interação (likes/downloads) de uma imagem dessa sessão
+// Busca a interação (likes/downloads) de uma imagem
 export const getInteraction = async (imageId) => {
   const sessionId = getSessionId();
   const { data, error } = await supabase
@@ -60,7 +60,7 @@ export const incrementDownload = async (imageId) => {
   }
 };
 
-// Lista de imagens curtidas (dessa sessão)
+// Lista de imagens curtidas
 export const getLikedImageIds = async () => {
   const sessionId = getSessionId();
   const { data, error } = await supabase
@@ -77,7 +77,7 @@ export const getLikedImageIds = async () => {
   return data.map((row) => row.image_id);
 };
 
-// Lista de imagens baixadas (dessa sessão)
+// Lista de imagens baixadas
 export const getDownloadedImageIds = async () => {
   const sessionId = getSessionId();
   const { data, error } = await supabase
